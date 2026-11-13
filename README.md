@@ -137,7 +137,7 @@ site.config.ts       brand, navigation and link toggles
 3. **Work:** project data, pinned gallery, tilting cards, work index, case studies, page
    transitions. ✅
 4. **Skills and marquee:** technology constellation with an accessible list, velocity marquee,
-   process and about sections.
+   process and about sections. ✅
 5. **Intake:** contact page, enquiry form, server action, delivery interface, booking toggle.
 6. **Polish and launch:** metadata and Open Graph images, 404, accessibility and performance
    passes, Lighthouse CI, deployment.
