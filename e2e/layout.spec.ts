@@ -31,3 +31,18 @@ test.describe('site shell', () => {
     await expect(dialog).toBeHidden()
   })
 })
+
+test.describe('responsive layout', () => {
+  for (const path of ['/', '/work', '/work/tidewater-clinics', '/contact']) {
+    test(`${path} never scrolls sideways on a phone`, async ({ page, isMobile }) => {
+      test.skip(!isMobile, 'phone widths only')
+      await page.goto(path)
+      await page.waitForLoadState('networkidle')
+      // Compare with the device width: when content overflows, a phone browser
+      // widens its layout viewport (and innerWidth) to fit it and zooms out.
+      const device = page.viewportSize()!.width
+      const scrollWidth = await page.evaluate(() => document.documentElement.scrollWidth)
+      expect(scrollWidth).toBeLessThanOrEqual(device)
+    })
+  }
+})
