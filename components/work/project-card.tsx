@@ -95,7 +95,7 @@ export function ProjectCard({ project, index, className }: ProjectCardProps) {
         </div>
 
         <div className="mt-5 flex items-baseline justify-between gap-4">
-          <h3 className="headline text-h3">{project.title}</h3>
+          <h2 className="headline text-h3">{project.title}</h2>
           <span className="shrink-0 label text-paper-faint">
             {String(index + 1).padStart(2, '0')} · {project.year}
           </span>
