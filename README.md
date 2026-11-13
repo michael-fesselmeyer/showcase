@@ -57,15 +57,16 @@ Open http://localhost:3000.
 
 ## Scripts
 
-| Command             | What it does                                    |
-| ------------------- | ----------------------------------------------- |
-| `npm run dev`       | Development server                              |
-| `npm run build`     | Production build                                |
-| `npm run lint`      | ESLint                                          |
-| `npm run typecheck` | Generates route types, then runs `tsc`          |
-| `npm run format`    | Prettier (with Tailwind class sorting)          |
-| `npm test`          | Unit tests (Vitest)                             |
-| `npm run test:e2e`  | End-to-end and accessibility tests (Playwright) |
+| Command              | What it does                                    |
+| -------------------- | ----------------------------------------------- |
+| `npm run dev`        | Development server                              |
+| `npm run build`      | Production build                                |
+| `npm run lint`       | ESLint                                          |
+| `npm run typecheck`  | Generates route types, then runs `tsc`          |
+| `npm run format`     | Prettier (with Tailwind class sorting)          |
+| `npm test`           | Unit tests (Vitest)                             |
+| `npm run test:e2e`   | End-to-end and accessibility tests (Playwright) |
+| `npm run lighthouse` | Lighthouse CI against a production build        |
 
 End-to-end tests run against a production build: run `npm run build` first. The first run also
 needs a browser: `npx playwright install chromium`.
@@ -147,11 +148,50 @@ site.config.ts       brand, navigation and link toggles
 
 ## Accessibility and performance
 
-- Full keyboard navigation with a skip link and visible focus states; semantic landmarks and
-  headings.
-- Automated WCAG 2.1 AA checks with axe on every end-to-end run.
+**Accessibility**
+
+- Full keyboard navigation with a skip link, visible focus states, semantic landmarks and
+  sequential headings. Every interactive effect is a real control (the constellation's nodes are
+  buttons and links), and focusing a project in the pinned gallery scrolls it into view.
+- Automated WCAG 2.1 AA checks with axe in every end-to-end run, on every page and in the form's
+  error state.
 - Colour tokens are chosen for contrast on the dark theme (body and label text at least 4.5:1).
-- `prefers-reduced-motion` is honoured throughout.
+- `prefers-reduced-motion` gets a calm, complete site: no opening sequence, smooth scrolling,
+  cursor effects or marquee movement; the gallery becomes a native scroll row and the
+  constellation a grouped list.
+
+**Performance**
+
+Lighthouse CI runs on every pull request against a production build, on an emulated mid-range
+phone with simulated throttling, and fails below 95 in any category (median of three runs). Last
+local run: 99–100 for performance, accessibility, best practices and SEO on the home page, the work
+index, a case study and the contact page.
+
+- Every route is static, enforced by `ensureStatic = 'navigation'` in the root layout.
+- The largest contentful element is always text. The hero shader loads after the page is idle,
+  over a CSS gradient in the same colours, and is skipped entirely when WebGL is not hardware
+  accelerated. It pauses off screen and when the tab is hidden.
+- The opening sequence is CSS driven and never hides the headline from the first paint.
+- Line reveals split text only as it nears the viewport. Only `transform` and `opacity` animate,
+  and late-loading media has reserved space, so layout shift stays near zero.
+
+See [ADR 0003](docs/adr/0003-performance-budget.md) for the reasoning.
+
+## Deployment
+
+The site is built for Vercel and needs no special configuration.
+
+1. Import the GitHub repository in Vercel. The framework (Next.js) and build command are detected
+   automatically; Node.js 24 comes from `.nvmrc` and `engines`.
+2. Optionally set `NEXT_PUBLIC_SITE_URL` to the final domain. Without it, metadata, the sitemap and
+   Open Graph images use Vercel's production domain.
+3. Before launch: replace the placeholder brand in `site.config.ts`, swap the sample projects in
+   `content/projects.ts`, enable the social and booking links you want, and connect an email
+   provider for enquiries (see [Enquiries](#enquiries)).
+4. Add the custom domain in the Vercel project settings.
+
+Open Graph images are generated at build time and fetch font subsets from Google Fonts; if that
+fetch fails, the images fall back to the default font and the build still succeeds.
 
 ## Roadmap
 
@@ -164,4 +204,4 @@ site.config.ts       brand, navigation and link toggles
    process and about sections. ✅
 5. **Intake:** contact page, enquiry form, server action, delivery interface, booking toggle. ✅
 6. **Polish and launch:** metadata and Open Graph images, 404, accessibility and performance
-   passes, Lighthouse CI, deployment.
+   passes, Lighthouse CI, deployment notes. ✅
