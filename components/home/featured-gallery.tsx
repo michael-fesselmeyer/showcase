@@ -125,7 +125,7 @@ export function FeaturedGallery({ projects }: { projects: Project[] }) {
         ))}
       </ul>
 
-      <div aria-hidden className="shell mt-10 hidden motion-reduce:hidden md:block">
+      <div aria-hidden className="shell mt-10 hidden md:motion-safe:block">
         <div className="h-px bg-line">
           <div ref={progress} className="h-px origin-left scale-x-0 bg-(image:--brand-gradient)" />
         </div>
