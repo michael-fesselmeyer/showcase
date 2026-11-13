@@ -6,7 +6,7 @@ editorial look, deliberate motion and a mobile-first performance budget.
 
 [![CI](https://github.com/michael-fesselmeyer/showcase/actions/workflows/ci.yml/badge.svg)](https://github.com/michael-fesselmeyer/showcase/actions/workflows/ci.yml)
 
-**Live:** not deployed yet · **Status:** in progress
+**Live:** [showcase-khaki-psi.vercel.app](https://showcase-khaki-psi.vercel.app) · **Status:** launched with sample content
 
 > All projects currently on the site are **samples** with invented clients, used to demonstrate
 > layout and features. The brand name is a placeholder.
@@ -179,7 +179,8 @@ See [ADR 0003](docs/adr/0003-performance-budget.md) for the reasoning.
 
 ## Deployment
 
-The site is built for Vercel and needs no special configuration.
+The site runs on Vercel, linked to this repository: every push to `main` deploys to production,
+and every pull request gets its own preview deployment. To set up a new copy:
 
 1. Import the GitHub repository in Vercel. The framework (Next.js) and build command are detected
    automatically; Node.js 24 comes from `.nvmrc` and `engines`.
