@@ -3,6 +3,7 @@
 import dynamic from 'next/dynamic'
 import { useEffect, useState } from 'react'
 import { usePrefersReducedMotion } from '@/lib/motion/use-media-query'
+import { hasFastWebGL } from '@/lib/webgl'
 
 // The WebGL bundle loads only in the browser, after the page is idle.
 const MeshGradient = dynamic(
@@ -17,24 +18,6 @@ function whenIdle(callback: () => void) {
   }
   const id = setTimeout(callback, 600)
   return () => clearTimeout(id)
-}
-
-/**
- * True when WebGL is hardware accelerated. Without a GPU (some older phones,
- * locked-down machines, headless browsers) the shader would render on the
- * CPU and make scrolling janky, so the CSS gradient stays instead.
- */
-function hasFastWebGL() {
-  try {
-    const canvas = document.createElement('canvas')
-    const options: WebGLContextAttributes = { failIfMajorPerformanceCaveat: true }
-    const gl: WebGLRenderingContext | WebGL2RenderingContext | null =
-      canvas.getContext('webgl2', options) ?? canvas.getContext('webgl', options)
-    gl?.getExtension('WEBGL_lose_context')?.loseContext()
-    return gl !== null
-  } catch {
-    return false
-  }
 }
 
 /** Reads the brand tokens so the shader follows the accent defined in CSS. */
