@@ -1,6 +1,7 @@
 @import 'tailwindcss';
 @import 'tw-animate-css';
 @import 'shadcn/tailwind.css';
+@import 'lenis/dist/lenis.css';
 
 /* The site has a single dark theme. `dark` is set on <html> so shadcn
    primitives pick their dark styles. */
@@ -242,6 +243,236 @@
   }
 }
 
+/* ------------------------------------------------------------------------
+   Motion
+   ------------------------------------------------------------------------ */
+
+/* Opening sequence: hidden unless the pre-paint script sets data-intro. */
+.intro {
+  display: none;
+}
+
+html[data-intro] .intro {
+  position: fixed;
+  inset: 0;
+  z-index: 90;
+  display: grid;
+  place-items: center;
+  align-content: center;
+  gap: 1.25rem;
+  background: var(--ink-950);
+  animation: intro-wipe 520ms var(--ease-in-out) 760ms both;
+}
+
+.intro-mark {
+  width: min(78vw, 34rem);
+  overflow: visible;
+  animation: intro-lift 520ms var(--ease-in-out) 760ms both;
+}
+
+.intro-text {
+  font-family: var(--font-display);
+  font-size: 150px;
+  font-style: italic;
+  letter-spacing: -0.03em;
+  font-variation-settings:
+    'opsz' 72,
+    'SOFT' 50;
+  fill: var(--paper);
+  fill-opacity: 0;
+  stroke: url(#intro-stroke);
+  stroke-width: 1.2;
+  stroke-dasharray: 700;
+  stroke-dashoffset: 700;
+  animation:
+    intro-draw 700ms var(--ease-in-out) both,
+    intro-fill 320ms ease-out 480ms both;
+}
+
+.intro-line {
+  display: block;
+  width: min(40vw, 12rem);
+  height: 1px;
+  background: var(--brand-gradient);
+  transform-origin: left;
+  animation: intro-line 560ms var(--ease-out) 200ms both;
+}
+
+@keyframes intro-draw {
+  to {
+    stroke-dashoffset: 0;
+  }
+}
+
+@keyframes intro-fill {
+  to {
+    fill-opacity: 1;
+  }
+}
+
+@keyframes intro-line {
+  from {
+    transform: scaleX(0);
+  }
+}
+
+@keyframes intro-lift {
+  to {
+    transform: translateY(-2rem);
+    opacity: 0;
+  }
+}
+
+@keyframes intro-wipe {
+  to {
+    clip-path: inset(0 0 100% 0);
+    visibility: hidden;
+  }
+}
+
+/* Hero entrance, played only as part of the opening sequence. */
+.hero-word {
+  display: inline-block;
+}
+
+.hero-word > span {
+  display: inline-block;
+}
+
+html[data-intro] .hero-word {
+  overflow: clip;
+  overflow-clip-margin: 0.12em;
+  vertical-align: top;
+}
+
+html[data-intro] .hero-word > span {
+  animation: hero-rise 900ms var(--ease-out) calc(1000ms + var(--i) * 55ms) both;
+}
+
+html[data-intro] [data-hero-fade] {
+  animation: hero-fade 900ms var(--ease-out) calc(1150ms + var(--i) * 60ms) both;
+}
+
+@keyframes hero-rise {
+  from {
+    transform: translateY(110%);
+  }
+}
+
+@keyframes hero-fade {
+  from {
+    opacity: 0;
+    transform: translateY(1rem);
+  }
+}
+
+/* Hero background: a CSS gradient paints first, the shader fades in over it. */
+.hero-fallback {
+  background:
+    radial-gradient(
+      55% 60% at 78% 28%,
+      color-mix(in oklab, var(--brand-to) 38%, transparent),
+      transparent 70%
+    ),
+    radial-gradient(
+      45% 50% at 95% 75%,
+      color-mix(in oklab, var(--brand-from) 34%, transparent),
+      transparent 72%
+    ),
+    var(--ink-950);
+}
+
+.hero-canvas {
+  animation: fade-in 1600ms var(--ease-out) both;
+}
+
+@keyframes fade-in {
+  from {
+    opacity: 0;
+  }
+}
+
+/* Line reveals: hidden only when JavaScript is running and motion is allowed.
+   The fail-safe shows the text even if the reveal never initialises. */
+@media (prefers-reduced-motion: no-preference) {
+  .js [data-reveal] {
+    visibility: hidden;
+    animation: reveal-failsafe 0s 2.5s forwards;
+  }
+}
+
+@keyframes reveal-failsafe {
+  to {
+    visibility: visible;
+  }
+}
+
+/* Film grain: a tiling noise texture nudged in steps. */
+.film-grain {
+  position: fixed;
+  inset: -3rem;
+  z-index: 70;
+  pointer-events: none;
+  opacity: 0.075;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='220' height='220'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='3' stitchTiles='stitch'/%3E%3CfeColorMatrix type='saturate' values='0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+  background-size: 220px;
+  will-change: transform;
+  animation: grain 1s steps(6) infinite;
+}
+
+@keyframes grain {
+  0% {
+    transform: translate(0, 0);
+  }
+  20% {
+    transform: translate(-1.5rem, 1rem);
+  }
+  40% {
+    transform: translate(1rem, -1.75rem);
+  }
+  60% {
+    transform: translate(-1.75rem, -0.5rem);
+  }
+  80% {
+    transform: translate(1.5rem, 1.5rem);
+  }
+  100% {
+    transform: translate(0, 0);
+  }
+}
+
+/* Custom cursor replaces the native one, except where you type. */
+html.has-custom-cursor,
+html.has-custom-cursor * {
+  cursor: none !important;
+}
+
+html.has-custom-cursor :is(input, textarea, [contenteditable='true']) {
+  cursor: text !important;
+}
+
+html.has-custom-cursor select {
+  cursor: pointer !important;
+}
+
+/* View transitions: keep the header still while pages change. */
+::view-transition {
+  pointer-events: none;
+}
+
+::view-transition-group(site-header) {
+  animation: none;
+  z-index: 100;
+}
+
+::view-transition-old(site-header) {
+  display: none;
+}
+
+::view-transition-new(site-header) {
+  animation: none;
+}
+
 @media (prefers-reduced-motion: reduce) {
   *,
   *::before,
@@ -250,5 +481,12 @@
     animation-iteration-count: 1 !important;
     transition-duration: 0.01ms !important;
     scroll-behavior: auto !important;
+  }
+
+  ::view-transition-old(*),
+  ::view-transition-new(*),
+  ::view-transition-group(*) {
+    animation-duration: 0s !important;
+    animation-delay: 0s !important;
   }
 }
