@@ -97,6 +97,28 @@ the featured gallery (when `featured: true`) and the stack constellation all upd
   muted loop that plays on hover.
 - **`sample: true`** labels a project as a sample everywhere it appears and disables its links.
 
+### Enquiries
+
+> **The enquiry form does not reach anyone yet.** Submissions are validated and then passed to
+> `deliverEnquiry` in `lib/enquiry/deliver.ts`, whose only implementation logs a redacted
+> summary on the server (no name, mailbox or message body). Plug in an email provider before
+> launch.
+
+- **Fields:** name, email, project type, budget range, timeline and project details, validated
+  with Zod in a server action (`app/contact/actions.ts`). Errors come back per field, with the
+  visitor's input intact.
+- **Works without JavaScript:** choices are native radio buttons, native validation applies until
+  the page hydrates, and the server action re-renders the page with errors or the confirmation.
+- **Spam protection:** a hidden honeypot field and a minimum time between the form appearing and
+  being sent. Both run only on otherwise valid submissions; suspected bots get a normal-looking
+  success and nothing is delivered. Without JavaScript only the honeypot applies, because the
+  timestamp is set in the browser.
+- **Connecting a provider:** implement the `DeliverEnquiry` type (for example with Resend), point
+  `deliverEnquiry` at it, and add the provider's key to `.env.local` and the host's settings.
+  Nothing else changes.
+- **Booking link:** set `booking.url` and `booking.enabled` in `site.config.ts` to show a "book a
+  call" card next to the form.
+
 ### Environment variables
 
 | Name                   | Required | Purpose                                                   |
@@ -112,7 +134,9 @@ app/                 routes, root layout, global styles and tokens
 components/layout/   header, footer, navigation, wordmark
 components/ui/       restyled shadcn/ui primitives
 lib/                 config schema, helpers, fonts, motion tokens
+lib/enquiry/         enquiry schema, spam checks, delivery interface
 docs/adr/            architecture decision records
+components/contact/  enquiry form
 components/home/     home page sections
 components/motion/   opening sequence, reveals, cursor, magnetic, smooth scroll, grain
 components/work/     project cards, media, art and stack tags
@@ -138,6 +162,6 @@ site.config.ts       brand, navigation and link toggles
    transitions. ✅
 4. **Skills and marquee:** technology constellation with an accessible list, velocity marquee,
    process and about sections. ✅
-5. **Intake:** contact page, enquiry form, server action, delivery interface, booking toggle.
+5. **Intake:** contact page, enquiry form, server action, delivery interface, booking toggle. ✅
 6. **Polish and launch:** metadata and Open Graph images, 404, accessibility and performance
    passes, Lighthouse CI, deployment.
