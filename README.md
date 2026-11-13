@@ -114,7 +114,7 @@ site.config.ts       brand, navigation and link toggles
 
 1. **Foundation:** tooling, tokens, typography, layout, navigation, footer, config. ✅
 2. **Motion system and hero:** Lenis and GSAP setup, reveal utilities, opening sequence, shader
-   hero, custom cursor, film grain.
+   hero, custom cursor, magnetic buttons, film grain. ✅
 3. **Work:** project data, pinned gallery, tilting cards, work index, case studies, page
    transitions.
 4. **Skills and marquee:** technology constellation with an accessible list, velocity marquee,
