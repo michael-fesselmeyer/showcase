@@ -473,6 +473,174 @@ html.has-custom-cursor select {
   animation: none;
 }
 
+/* Project art: still by default, alive while its card is hovered or focused. */
+.project-art [data-anim] {
+  transform-box: fill-box;
+  transform-origin: center;
+  animation-play-state: paused;
+  animation-timing-function: var(--ease-in-out);
+  animation-iteration-count: infinite;
+  animation-direction: alternate;
+}
+
+.project-art [data-anim='spin'] {
+  transform-box: view-box;
+  animation-name: art-spin;
+  animation-timing-function: linear;
+  animation-direction: normal;
+}
+.project-art [data-anim='pulse'] {
+  animation-name: art-pulse;
+  animation-duration: 1.6s;
+}
+.project-art [data-anim='dash'] {
+  animation-name: art-dash;
+  animation-duration: 3s;
+  animation-timing-function: linear;
+  animation-direction: normal;
+}
+.project-art [data-anim='drift'] {
+  animation-name: art-drift;
+}
+.project-art [data-anim='grow'] {
+  transform-origin: bottom;
+  animation-name: art-grow;
+  animation-duration: 1.4s;
+}
+.project-art [data-anim='breathe'] {
+  animation-name: art-breathe;
+  animation-duration: 2.4s;
+}
+.project-art [data-anim='float'] {
+  animation-name: art-float;
+  animation-duration: 2.8s;
+}
+
+:is(.group:hover, .group:focus-within, [data-art-playing]) .project-art [data-anim] {
+  animation-play-state: running;
+}
+
+@keyframes art-spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+@keyframes art-pulse {
+  to {
+    opacity: 0.25;
+    transform: scale(0.82);
+  }
+}
+@keyframes art-dash {
+  to {
+    stroke-dashoffset: -140;
+  }
+}
+@keyframes art-drift {
+  to {
+    transform: translateX(-120px);
+  }
+}
+@keyframes art-grow {
+  to {
+    transform: scaleY(0.72);
+  }
+}
+@keyframes art-breathe {
+  to {
+    transform: scale(1.08);
+    opacity: 0.4;
+  }
+}
+@keyframes art-float {
+  to {
+    transform: translateY(-14px);
+  }
+}
+
+/* Cursor spotlight: a soft glow that follows the pointer across a group of
+   cards, lighting their borders even before the pointer reaches them. */
+.spotlight-card {
+  --mx: -999px;
+  --my: -999px;
+  position: relative;
+}
+
+.spotlight-card::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  z-index: 2;
+  border-radius: inherit;
+  padding: 1px;
+  background: radial-gradient(
+    22rem circle at var(--mx) var(--my),
+    color-mix(in oklab, var(--brand) 85%, white 15%),
+    transparent 60%
+  );
+  mask:
+    linear-gradient(#000 0 0) content-box exclude,
+    linear-gradient(#000 0 0);
+  pointer-events: none;
+}
+
+.spotlight-card::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  border-radius: inherit;
+  background: radial-gradient(
+    28rem circle at var(--mx) var(--my),
+    rgb(255 255 255 / 0.07),
+    transparent 55%
+  );
+  opacity: 0;
+  transition: opacity var(--duration-base) var(--ease-out);
+  pointer-events: none;
+}
+
+.group:hover .spotlight-card::after {
+  opacity: 1;
+}
+
+/* View transitions: card media morphs into the case-study hero. */
+::view-transition-group(.morph) {
+  animation-duration: 560ms;
+  animation-timing-function: var(--ease-in-out);
+}
+
+::view-transition-image-pair(.morph) {
+  animation-name: morph-soften;
+}
+
+@keyframes morph-soften {
+  40% {
+    filter: blur(2px);
+  }
+}
+
+::view-transition-old(root) {
+  animation: 220ms var(--ease-in) both page-out;
+}
+
+::view-transition-new(root) {
+  animation: 420ms var(--ease-out) 120ms both page-in;
+}
+
+@keyframes page-out {
+  to {
+    opacity: 0;
+  }
+}
+
+@keyframes page-in {
+  from {
+    opacity: 0;
+    transform: translateY(12px);
+  }
+}
+
 @media (prefers-reduced-motion: reduce) {
   *,
   *::before,
