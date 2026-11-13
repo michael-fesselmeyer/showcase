@@ -32,25 +32,40 @@ export function RevealText<T extends ElementType = 'p'>({
 
       const mm = gsap.matchMedia()
       mm.add('(prefers-reduced-motion: no-preference)', () => {
-        const split = SplitText.create(el, {
-          type: 'lines',
-          mask: 'lines',
-          autoSplit: true,
-          // Lines stay plain text for assistive tech; no aria-label on generic elements.
-          aria: 'none',
-          onSplit(self) {
-            gsap.set(el, { visibility: 'visible' })
-            return gsap.from(self.lines, {
-              yPercent: 110,
-              duration: seconds('slow'),
-              ease: ease.out,
-              stagger: 0.08,
-              delay,
-              scrollTrigger: { trigger: el, start: 'top 90%', once: true },
+        let split: SplitText | null = null
+
+        // Split lazily, just before the text scrolls into view, so a page with
+        // many reveals does not pay for all of the line measuring at load.
+        const observer = new IntersectionObserver(
+          ([entry]) => {
+            if (!entry?.isIntersecting) return
+            observer.disconnect()
+            split = SplitText.create(el, {
+              type: 'lines',
+              mask: 'lines',
+              autoSplit: true,
+              // Lines stay plain text for assistive tech; no aria-label on generic elements.
+              aria: 'none',
+              onSplit(self) {
+                gsap.set(el, { visibility: 'visible' })
+                return gsap.from(self.lines, {
+                  yPercent: 110,
+                  duration: seconds('slow'),
+                  ease: ease.out,
+                  stagger: 0.08,
+                  delay,
+                })
+              },
             })
           },
-        })
-        return () => split.revert()
+          { rootMargin: '0px 0px -8% 0px' },
+        )
+        observer.observe(el)
+
+        return () => {
+          observer.disconnect()
+          split?.revert()
+        }
       })
       return () => mm.revert()
     },
