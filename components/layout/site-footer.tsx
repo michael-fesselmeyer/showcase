@@ -65,7 +65,7 @@ export function SiteFooter() {
         <div aria-hidden className="mt-20">
           <Wordmark
             asText
-            className="block text-[clamp(5rem,24vw,26rem)] leading-[0.8] tracking-[-0.06em] text-ink-800 select-none"
+            className="block bg-linear-to-b from-paper/14 to-paper/0 bg-clip-text text-[clamp(5rem,24vw,26rem)] leading-[0.8] tracking-[-0.06em] text-transparent select-none"
           />
         </div>
 
