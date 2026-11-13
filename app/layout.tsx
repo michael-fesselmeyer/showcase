@@ -12,6 +12,10 @@ import './globals.css'
 
 const { name, tagline, description } = siteConfig.brand
 
+// Every route must be fully static. The build fails if a change would add
+// request-time rendering, and unknown case-study slugs get a real 404.
+export const ensureStatic = 'navigation'
+
 export const metadata: Metadata = {
   metadataBase: siteUrl(),
   title: { default: `${name}: ${tagline}`, template: `%s · ${name}` },
