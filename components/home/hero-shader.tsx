@@ -19,6 +19,24 @@ function whenIdle(callback: () => void) {
   return () => clearTimeout(id)
 }
 
+/**
+ * True when WebGL is hardware accelerated. Without a GPU (some older phones,
+ * locked-down machines, headless browsers) the shader would render on the
+ * CPU and make scrolling janky, so the CSS gradient stays instead.
+ */
+function hasFastWebGL() {
+  try {
+    const canvas = document.createElement('canvas')
+    const options: WebGLContextAttributes = { failIfMajorPerformanceCaveat: true }
+    const gl: WebGLRenderingContext | WebGL2RenderingContext | null =
+      canvas.getContext('webgl2', options) ?? canvas.getContext('webgl', options)
+    gl?.getExtension('WEBGL_lose_context')?.loseContext()
+    return gl !== null
+  } catch {
+    return false
+  }
+}
+
 /** Reads the brand tokens so the shader follows the accent defined in CSS. */
 function readPalette() {
   const style = getComputedStyle(document.documentElement)
@@ -30,14 +48,20 @@ function readPalette() {
 /**
  * Animated mesh-gradient background for the hero. A CSS gradient in the same
  * colours paints first, so the largest contentful element is the headline,
- * never the canvas. The shader pauses itself when off screen or when the tab
+ * never the canvas, and it remains the background where WebGL is slow. The shader pauses itself when off screen or when the tab
  * is hidden, and holds still for reduced motion.
  */
 export function HeroShader() {
   const reduced = usePrefersReducedMotion()
   const [palette, setPalette] = useState<string[] | null>(null)
 
-  useEffect(() => whenIdle(() => setPalette(readPalette())), [])
+  useEffect(
+    () =>
+      whenIdle(() => {
+        if (hasFastWebGL()) setPalette(readPalette())
+      }),
+    [],
+  )
 
   return (
     <div aria-hidden className="hero-fallback absolute inset-0 -z-10 overflow-hidden">
