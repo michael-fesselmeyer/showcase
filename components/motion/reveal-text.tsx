@@ -36,6 +36,8 @@ export function RevealText<T extends ElementType = 'p'>({
           type: 'lines',
           mask: 'lines',
           autoSplit: true,
+          // Lines stay plain text for assistive tech; no aria-label on generic elements.
+          aria: 'none',
           onSplit(self) {
             gsap.set(el, { visibility: 'visible' })
             return gsap.from(self.lines, {
