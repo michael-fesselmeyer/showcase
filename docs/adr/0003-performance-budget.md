@@ -46,3 +46,21 @@ The first measurement of the home page scored 42 to 97 across three runs. Two ca
   and total blocking time under 50 ms in local runs.
 - New effects must ship with a fallback that works before JavaScript and with reduced motion, and
   Lighthouse CI will catch regressions in review.
+
+## Addendum: smoothness while scrolling (2026-11-14)
+
+Load scores do not show scroll smoothness, so the home page was also measured by recording frame
+times and long animation frames while scrolling the live site. Steady scrolling ran at the
+display's full 120 fps, with two problems:
+
+- **The pinned gallery reported a layout shift of about 1.6.** A JavaScript pin switches the
+  section to `position: fixed`, which browsers count as a shift even though nothing visibly moves.
+  The gallery now holds with CSS `position: sticky` inside a section sized to the slide distance,
+  and only the row's transform is scrubbed. Sticky runs on the compositor, so it also stays smooth
+  under touch and keyboard scrolling. The section clips with `overflow: clip`, since `hidden`
+  would break sticky and no clipping at all widened the phone layout.
+- **A 220 ms hitch as the gallery heading entered view**, from splitting text into lines at that
+  moment. Reveals are now split in idle time after fonts load, and only the animation waits for
+  the text to come into view.
+
+Result: layout shift during scrolling went from 1.57 to 0, and the hitch is gone.
