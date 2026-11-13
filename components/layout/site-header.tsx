@@ -1,4 +1,5 @@
 import Link from 'next/link'
+import { Magnetic } from '@/components/motion/magnetic'
 import { MobileMenu } from '@/components/layout/mobile-menu'
 import { NavLinks } from '@/components/layout/nav-links'
 import { Wordmark } from '@/components/layout/wordmark'
@@ -18,12 +19,14 @@ export function SiteHeader() {
         </nav>
 
         <div className="flex items-center gap-3">
-          <Link
-            href="/contact"
-            className="hidden h-10 items-center rounded-full bg-paper px-5 text-small font-medium text-ink-950 transition-colors duration-(--duration-fast) hover:bg-white md:inline-flex"
-          >
-            Start a project
-          </Link>
+          <Magnetic className="hidden md:inline-flex">
+            <Link
+              href="/contact"
+              className="inline-flex h-10 items-center rounded-full bg-paper px-5 text-small font-medium text-ink-950 transition-colors duration-(--duration-fast) hover:bg-white"
+            >
+              Start a project
+            </Link>
+          </Magnetic>
           <MobileMenu className="md:hidden" />
         </div>
       </div>
