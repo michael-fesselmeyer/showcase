@@ -34,6 +34,8 @@ export function VelocityMarquee({ bands, label }: { bands: Band[]; label: string
             duration: BASE_DURATION,
             ease: 'none',
             repeat: -1,
+            // Starts still; plays only while the bands are on screen (below).
+            paused: true,
           })
         })
 
@@ -59,13 +61,16 @@ export function VelocityMarquee({ bands, label }: { bands: Band[]; label: string
           },
         })
 
-        // Off screen, the loop stops costing anything.
-        ScrollTrigger.create({
-          trigger: root.current,
-          start: 'top bottom',
-          end: 'bottom top',
-          onToggle: (self) => tweens.forEach((t) => (self.isActive ? t.resume() : t.pause())),
+        // Off screen, including before the visitor scrolls to it, the loop
+        // stops costing anything.
+        const visibility = new IntersectionObserver(([entry]) => {
+          for (const tween of tweens) {
+            if (entry?.isIntersecting) tween.resume()
+            else tween.pause()
+          }
         })
+        visibility.observe(root.current!)
+        return () => visibility.disconnect()
       })
       return () => mm.revert()
     },
