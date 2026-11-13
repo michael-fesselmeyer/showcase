@@ -1,4 +1,5 @@
 import { About } from '@/components/home/about'
+import { ContactCta } from '@/components/home/contact-cta'
 import { Hero } from '@/components/home/hero'
 import { Process } from '@/components/home/process'
 import { SelectedWork } from '@/components/home/selected-work'
@@ -33,6 +34,7 @@ export default function HomePage() {
       <Skills />
       <Process />
       <About />
+      <ContactCta />
     </>
   )
 }
