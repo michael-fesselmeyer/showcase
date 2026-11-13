@@ -21,6 +21,8 @@ export const metadata: Metadata = {
   title: { default: `${name}: ${tagline}`, template: `%s · ${name}` },
   description,
   applicationName: name,
+  openGraph: { type: 'website', siteName: name, locale: 'en', title: name, description },
+  twitter: { card: 'summary_large_image' },
 }
 
 export const viewport: Viewport = {
