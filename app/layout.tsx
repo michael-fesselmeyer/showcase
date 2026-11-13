@@ -1,6 +1,10 @@
 import type { Metadata, Viewport } from 'next'
 import { SiteFooter } from '@/components/layout/site-footer'
 import { SiteHeader } from '@/components/layout/site-header'
+import { CustomCursor } from '@/components/motion/custom-cursor'
+import { FilmGrain } from '@/components/motion/film-grain'
+import { introScript, OpeningSequence } from '@/components/motion/opening-sequence'
+import { SmoothScroll } from '@/components/motion/smooth-scroll'
 import { fontVariables } from '@/lib/fonts'
 import { siteUrl } from '@/lib/site'
 import { siteConfig } from '@/site.config'
@@ -22,8 +26,13 @@ export const viewport: Viewport = {
 
 export default function RootLayout({ children }: LayoutProps<'/'>) {
   return (
-    <html lang="en" className={`dark ${fontVariables}`}>
+    // The pre-paint script adds a class and the intro attribute to <html>.
+    <html lang="en" className={`dark ${fontVariables}`} suppressHydrationWarning>
+      <head>
+        <script dangerouslySetInnerHTML={{ __html: introScript }} />
+      </head>
       <body id="top">
+        <OpeningSequence />
         <a
           href="#main"
           className="fixed top-3 left-3 z-50 -translate-y-20 rounded-full bg-paper px-4 py-2.5 label text-ink-950 transition-transform focus-visible:translate-y-0"
@@ -35,6 +44,9 @@ export default function RootLayout({ children }: LayoutProps<'/'>) {
           {children}
         </main>
         <SiteFooter />
+        <FilmGrain />
+        <CustomCursor />
+        <SmoothScroll />
       </body>
     </html>
   )
