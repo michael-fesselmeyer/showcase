@@ -82,6 +82,21 @@ Everything an owner changes day to day is configuration, never a component edit.
 - **`lib/fonts.ts`:** the display, text and mono typefaces. Swap a face here and every token picks
   it up.
 
+### Adding a project
+
+Projects live in `content/projects.ts`, one typed entry each, validated by a Zod schema in
+`lib/projects-schema.ts`. An entry holds the slug, title, client, summary, year, role, stack
+tags, links, media and the case-study sections (problem, what was built, highlights, results).
+Adding an entry is all it takes: the work index, the case-study page (generated at build time),
+the featured gallery (when `featured: true`) and the stack constellation all update from it.
+
+- **Stack tags** come from `lib/stack.ts`, which also assigns each technology to a group (front
+  end, back end, data, payments, testing, infrastructure). Add a technology there first.
+- **Media** is either generated art (`{ kind: 'art', pattern, colors }`, used by the samples) or
+  a screenshot (`{ kind: 'image', src, alt, width, height, previewVideo? }`) with an optional
+  muted loop that plays on hover.
+- **`sample: true`** labels a project as a sample everywhere it appears and disables its links.
+
 ### Environment variables
 
 | Name                   | Required | Purpose                                                   |
@@ -98,6 +113,10 @@ components/layout/   header, footer, navigation, wordmark
 components/ui/       restyled shadcn/ui primitives
 lib/                 config schema, helpers, fonts, motion tokens
 docs/adr/            architecture decision records
+components/home/     home page sections
+components/motion/   opening sequence, reveals, cursor, magnetic, smooth scroll, grain
+components/work/     project cards, media, art and stack tags
+content/             typed project entries
 e2e/                 Playwright tests and the axe helper
 site.config.ts       brand, navigation and link toggles
 ```
@@ -116,7 +135,7 @@ site.config.ts       brand, navigation and link toggles
 2. **Motion system and hero:** Lenis and GSAP setup, reveal utilities, opening sequence, shader
    hero, custom cursor, magnetic buttons, film grain. ✅
 3. **Work:** project data, pinned gallery, tilting cards, work index, case studies, page
-   transitions.
+   transitions. ✅
 4. **Skills and marquee:** technology constellation with an accessible list, velocity marquee,
    process and about sections.
 5. **Intake:** contact page, enquiry form, server action, delivery interface, booking toggle.
