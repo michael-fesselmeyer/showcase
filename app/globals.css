@@ -339,14 +339,11 @@ html[data-intro] .intro {
   display: inline-block;
 }
 
-html[data-intro] .hero-word {
-  overflow: clip;
-  overflow-clip-margin: 0.12em;
-  vertical-align: top;
-}
-
+/* The words stay painted (never clipped or transparent) while the overlay
+   covers them, so the headline is the largest contentful paint from the
+   first frame; they settle into place as the overlay wipes away. */
 html[data-intro] .hero-word > span {
-  animation: hero-rise 900ms var(--ease-out) calc(1000ms + var(--i) * 55ms) both;
+  animation: hero-rise 1100ms var(--ease-out) calc(820ms + var(--i) * 55ms) both;
 }
 
 html[data-intro] [data-hero-fade] {
@@ -355,7 +352,8 @@ html[data-intro] [data-hero-fade] {
 
 @keyframes hero-rise {
   from {
-    transform: translateY(110%);
+    transform: translateY(0.45em);
+    filter: blur(10px);
   }
 }
 
