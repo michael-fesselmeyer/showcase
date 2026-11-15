@@ -24,6 +24,17 @@ editorial look, deliberate motion and a mobile-first performance budget.
 
 Features land phase by phase; see [Roadmap](#roadmap) for what is built today.
 
+### Planned: studio tools
+
+A private area for the studio's owner is planned alongside the public site: a pipeline for the
+enquiries the contact form receives, clients and engagements, a time log, invoices and expenses,
+partner shares, and exports for tax preparation. It will sit behind sign-in, with every request
+authorised on the server, and it changes nothing about the public pages, which stay static.
+
+Nothing is built yet. The plan is in [docs/studio-tools](docs/studio-tools/README.md): product
+spec, architecture, data model, security model, roadmap and backlog. The tools keep records; they
+do not give tax, accounting or legal advice.
+
 ## Stack
 
 | Area                | Choice                                                           |
@@ -38,7 +49,8 @@ Features land phase by phase; see [Roadmap](#roadmap) for what is built today.
 | Quality             | ESLint, Prettier, Vitest, Playwright with axe, GitHub Actions CI |
 
 Why these choices: [ADR 0001](docs/adr/0001-stack-and-rendering.md) (stack and rendering) and
-[ADR 0002](docs/adr/0002-motion-stack.md) (motion).
+[ADR 0002](docs/adr/0002-motion-stack.md) (motion). ADRs 0004 to 0009 record the decisions for the
+planned studio tools.
 
 ## Getting started
 
@@ -137,6 +149,7 @@ components/ui/       restyled shadcn/ui primitives
 lib/                 config schema, helpers, fonts, motion tokens
 lib/enquiry/         enquiry schema, spam checks, delivery interface
 docs/adr/            architecture decision records
+docs/studio-tools/   plan for the private studio tools (not built yet)
 components/contact/  enquiry form
 components/home/     home page sections
 components/motion/   opening sequence, reveals, cursor, magnetic, smooth scroll, grain
@@ -206,3 +219,11 @@ fetch fails, the images fall back to the default font and the build still succee
 5. **Intake:** contact page, enquiry form, server action, delivery interface, booking toggle. ✅
 6. **Polish and launch:** metadata and Open Graph images, 404, accessibility and performance
    passes, Lighthouse CI, deployment notes. ✅
+7. **Studio tools:** a private, owner-only area for leads, engagements, time, money, partners and
+   tax preparation. Planned; see the [studio tools roadmap](docs/studio-tools/roadmap.md).
+
+## Contributing
+
+The rules for every change (what may be committed, branch and commit conventions, the performance
+budget, free services only) are in [AGENTS.md](AGENTS.md). A check on every pull request enforces
+the mechanical ones.
