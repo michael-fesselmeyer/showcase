@@ -153,13 +153,13 @@ Fixtures and seeds use invented companies and `example.test` addresses.
 
 ## Repository controls
 
-| Control                                                                                | State when this plan was written |
-| -------------------------------------------------------------------------------------- | -------------------------------- |
-| Secret scanning                                                                        | Enabled                          |
-| Push protection for secrets                                                            | Enabled                          |
-| Pull request hygiene check                                                             | Added with this plan             |
-| Branch protection on `main` (required checks, up-to-date branches, rebase merges only) | Not yet set: on the backlog      |
-| Dependency alerts and security updates                                                 | Not yet enabled: on the backlog  |
+| Control                                                                                                                                                               | State                                               |
+| --------------------------------------------------------------------------------------------------------------------------------------------------------------------- | --------------------------------------------------- |
+| Secret scanning                                                                                                                                                       | Enabled                                             |
+| Push protection for secrets                                                                                                                                           | Enabled                                             |
+| Pull request hygiene check                                                                                                                                            | Enabled; the optional blocked-terms list is not set |
+| Rules on `main`: changes only through a pull request, merged by rebase, with the branch up to date and the CI and hygiene checks passing; no force pushes or deletion | Enabled, as a repository ruleset with no bypass     |
+| Dependency alerts and security updates                                                                                                                                | Not yet enabled: on the backlog                     |
 
 ## Before production sign-in is switched on
 
