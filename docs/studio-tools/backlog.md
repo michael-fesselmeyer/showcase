@@ -157,8 +157,8 @@ Labels: `foundations`. Depends on: F-11.
 
 Labels: `ops`. Depends on: nothing. **Owner's OK** (repository settings).
 
-- [ ] `main` requires the CI and hygiene checks, an up-to-date branch, and allows rebase merges
-      only.
+- [x] `main` requires the CI and hygiene checks, an up-to-date branch, and allows rebase merges
+      only. Done as a repository ruleset; see the [security model](security.md#repository-controls).
 - [ ] Dependency alerts and security updates are enabled.
 - [ ] The optional blocked-terms secret for the hygiene check is set, or the decision not to use
       it is recorded.
